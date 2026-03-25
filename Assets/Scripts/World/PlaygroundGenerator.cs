@@ -130,7 +130,7 @@ public class PlaygroundGenerator : MonoBehaviour
 
         // Seat
         float seatY = -(links * linkSpacing) - 0.1f;
-        Prim(PrimitiveType.Cube, "Seat", swingRoot, new Vector3(0f, seatY, 0f), Vector3.zero, new Vector3(0.6f, 0.07f, 0.3f), ColWood, parent: swingRoot);
+        Prim(PrimitiveType.Cube, "Seat", swingRoot, new Vector3(0f, seatY, 0f), Vector3.zero, new Vector3(0.6f, 0.07f, 0.3f), ColWood, parent2: swingRoot);
     }
 
     // ── Sandbox ──────────────────────────────────────────────────────────────
@@ -193,7 +193,7 @@ public class PlaygroundGenerator : MonoBehaviour
         go.name = name;
         go.transform.parent        = parent;
         go.transform.localPosition = localPos;
-        go.transform.localEuler    = localEuler;
+        go.transform.localEulerAngles = localEuler;
         go.transform.localScale    = localScale;
         go.GetComponent<MeshRenderer>().sharedMaterial = MakeMat(color);
         return go.transform;
