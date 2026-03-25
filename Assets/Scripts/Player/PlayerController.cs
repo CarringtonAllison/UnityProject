@@ -109,4 +109,20 @@ public class PlayerController : MonoBehaviour
         _verticalVelocity.y += gravity * Time.deltaTime;
         _cc.Move(_verticalVelocity * Time.deltaTime);
     }
+
+    // Called by Enemy when the player stomps it
+    public void Bounce(float height)
+    {
+        _verticalVelocity.y = Mathf.Sqrt(height * -2f * gravity);
+        _jumpsRemaining = maxJumps;
+    }
+
+    // Detect landing on top of an enemy
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (_verticalVelocity.y >= 0f) return;  // only while falling
+        if (hit.normal.y < 0.7f) return;         // only top surfaces
+
+        hit.gameObject.GetComponentInParent<Enemy>()?.OnStomp(this);
+    }
 }

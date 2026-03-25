@@ -58,7 +58,10 @@ public static class SceneBuilder
         // ── 6. Wire PlayerAnimator ────────────────────────────────────────────
         WireAnimator(player);
 
-        // ── 7. Mark dirty ─────────────────────────────────────────────────────
+        // ── 7. Enemy Spawner ──────────────────────────────────────────────────
+        new GameObject("EnemySpawner").AddComponent<EnemySpawner>();
+
+        // ── 8. Mark dirty ─────────────────────────────────────────────────────
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
 
         Debug.Log("[SceneBuilder] ✓ Scene built. Press Play to run.");
