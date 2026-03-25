@@ -19,14 +19,19 @@ public class PlayerController : MonoBehaviour
     public bool   IsSprinting       { get; private set; }
     public Vector3 HorizontalVelocity { get; private set; }
 
+    [Header("Jump")]
+    [SerializeField] private int maxJumps = 2;
+
     private CharacterController _cc;
     private Vector3 _verticalVelocity;
     private float   _targetSpeed;
     private bool    _jumpRequested;
+    private int     _jumpsRemaining;
 
     private void Awake()
     {
         _cc = GetComponent<CharacterController>();
+        _jumpsRemaining = maxJumps;
     }
 
     private void Update()
@@ -39,17 +44,21 @@ public class PlayerController : MonoBehaviour
 
     private void GroundCheck()
     {
+        bool wasGrounded = IsGrounded;
         IsGrounded = _cc.isGrounded;
 
         // Keep character pressed to ground; prevents slow drift off slopes
         if (IsGrounded && _verticalVelocity.y < 0f)
             _verticalVelocity.y = -2f;
+
+        if (IsGrounded && !wasGrounded)
+            _jumpsRemaining = maxJumps;
     }
 
     private void GatherInput()
     {
         IsSprinting   = Input.GetKey(KeyCode.LeftShift);
-        _jumpRequested = Input.GetKeyDown(KeyCode.Space) && IsGrounded;
+        _jumpRequested = Input.GetKeyDown(KeyCode.Space) && _jumpsRemaining > 0;
         _targetSpeed  = IsSprinting ? sprintSpeed : walkSpeed;
     }
 
@@ -92,7 +101,10 @@ public class PlayerController : MonoBehaviour
     private void ApplyGravityAndJump()
     {
         if (_jumpRequested)
+        {
             _verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            _jumpsRemaining--;
+        }
 
         _verticalVelocity.y += gravity * Time.deltaTime;
         _cc.Move(_verticalVelocity * Time.deltaTime);
